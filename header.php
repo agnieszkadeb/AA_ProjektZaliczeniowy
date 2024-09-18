@@ -15,7 +15,7 @@
                     <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="index.php">Home</a></li>
                         <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="about.php">About</a></li>
                         <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="blog.php">Blog</a></li>
-                        <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="store.php">Future plans</a></li>
+                        <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="store.php">Contact</a></li>
                     </ul>
                 </div>
             </div>

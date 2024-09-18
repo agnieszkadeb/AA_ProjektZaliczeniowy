@@ -27,7 +27,7 @@ $(document).ready(function() {
 
         // Prosta walidacja front-end
         if(email === "" || password === "") {
-            $("#error_msg").html('<div class="alert alert-danger"><strong>Wszystkie pola są wymagane.</strong></div>');
+            $("#error_msg").html('<div class="alert alert-danger"><strong>All fields are required!</strong></div>');
             return;
         }
 
@@ -50,7 +50,7 @@ $(document).ready(function() {
                     window.location.href = "blog.php"; // Przekierowanie po sukcesie
                 } 
                 else if(trimmedResponse === 'false') {
-                    $("#error_msg").html('<div class="alert alert-danger"><strong>Nieprawidłowy email lub hasło.</strong></div>');
+                    $("#error_msg").html('<div class="alert alert-danger"><strong>Wrong email or password.</strong></div>');
                 } 
                 else {
                     // Obsługa innych odpowiedzi
