@@ -12,66 +12,80 @@
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
+    <!-- jQuery  -->
+    <script src="js/jquery.js"></script>
+    
         <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
     
-<script type="text/javascript"> 
- $(document).ready(function () {
-    $("#register").click(function () {
-        // Get input values
-        var fname = $("#fname").val();
-        var lname = $("#lname").val();
-        var email = $("#email").val();  // Corrected this selector
-        var password = $("#password").val();
-        var confirmPassword = $("#confirmPassword").val();
+  
+    <!-- Your Ajax Script -->
+    <script type="text/javascript"> 
+    $(document).ready(function () {
+        $("#register").click(function (event) {
+            event.preventDefault(); // Prevent the default form submission
 
-        // Make an AJAX request
-        $.ajax({
-            type: "POST",
-            url: "adduser.php",
-            data: {
-                name: fname,
-                surname: lname,
-                email: email,
-                password: password,
-                confirmPassword: confirmPassword
-            },
-            success: function (response) {
-                if (response === 'true') {
-                    // If account creation was successful
-                    $("#add_err2").html('<div class="alert alert-success">\
-                        <strong>Account</strong> processed.\
-                    </div>');
-                    window.location.href = "index.php";
-                } else if (response === 'false') {
-                    // If email is already in the system
-                    $("#add_err2").html('<div class="alert alert-danger">\
-                        <strong>Email Address</strong> already in system.\
-                    </div>');
-                } else if (response === 'fname') {
-                    // If the first name is missing
-                    $("#add_err2").html('<div class="alert alert-danger">\
-                        <strong>First Name</strong> is required.\
-                    </div>');
-                } else if (response === 'lname') {
-                    // If the last name is missing
-                    $("#add_err2").html('<div class="alert alert-danger">\
-                        <strong>Last Name</strong> is required.\
-                    </div>');
+            // Get input values
+            var name = $("#name").val().trim();
+            var surname = $("#surname").val();
+            var email = $("#email").val().trim();
+            var password = $("#password").val();
+
+            // Make an AJAX request
+            $.ajax({
+                type: "POST",
+                url: "adduser.php",
+                data: {
+                    name: name,
+                    surname: surname,
+                    email: email,
+                    password: password
+                },
+                success: function (response) {
+                    // Trim the response to avoid unexpected whitespace
+                    response = response.trim();
+                    
+                    if (response === 'true') {
+                        // If account creation was successful
+                        $("#error_msg").html('<div class="alert alert-success"><strong>Account</strong> processed successfully.</div>');
+                        window.location.href = "index.php"; // Redirect after success
+                    } else if (response === 'false') {
+                        // If email is already in the system
+                        $("#error_msg").html('<div class="alert alert-danger"><strong>Email Address</strong> already exists.</div>');
+                    } else if (response === 'name') {
+                        // If the first name is missing
+                        $("#error_msg").html('<div class="alert alert-danger"><strong>First Name</strong> is required.</div>');
+                    } 
+                    // Added your conditions below
+                    else if (response === 'surname') {
+                        // If the last name is missing
+                        $("#error_msg").html('<div class="alert alert-danger"><strong>Last Name</strong> is required.</div>');
+                    } else if (response === 'eshort') {
+                        // If the email field is too short
+                        $("#error_msg").html('<div class="alert alert-danger"><strong>Email Address</strong> is too short.</div>');
+                    } else if (response === 'eformat') {
+                        // If the email format is invalid
+                        $("#error_msg").html('<div class="alert alert-danger"><strong>Email Address</strong> format is not valid.</div>');
+                    } else if (response === 'pshort') { 
+                        // If the password is too short
+                        $("#error_msg").html('<div class="alert alert-danger"><strong>Password</strong> must be at least 5 characters.</div>');
+                    } else {
+                        // Generic error message
+                        $("#error_msg").html('<div class="alert alert-danger"><strong>Error!</strong> Processing request. Please try again.</div>');
+                    }
+                },
+                error: function () {
+                    // Handle any errors during the AJAX request
+                    $("#error_msg").html('<div class="alert alert-danger"><strong>Error!</strong> Something went wrong.</div>');
+                },
+                beforeSend: function () {
+                    // Show a loading message before the request is processed
+                    $("#error_msg").html('<div class="alert alert-info"><strong>Loading...</strong></div>');
                 }
-            },
-            error: function () {
-                // Handle any errors during the AJAX request
-                $("#add_err2").html('<div class="alert alert-danger">\
-                    <strong>Error!</strong> Something went wrong.\
-                </div>');
-            }
+            });
         });
     });
-});
-
-
-</script>
+    </script>
 </head>
 <body>
     <?php include 'header.php'; ?>
@@ -85,32 +99,29 @@
                             <span class="section-heading-upper">Join Our Community</span>
                             <span class="section-heading-lower">Register Now</span>
                         </h2>
-
+                            <div id="error_msg" class="mb-3">
+                             
+                            </div>
                         <!-- Registration Form -->
-                        <form action="register.php" method="post">
+                        <form id="registrationForm" role="form" method="post">
                             <div class="mb-3">
                                 <label for="name" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="name" name="name" maxlength="25" placeholder="Enter your name" required>
+                                <input type="text" class="form-control" id="name" name="name" maxlength="25" placeholder="Enter your name" >
                             </div>
                             
                             <div class="mb-3">
                                 <label for="surname" class="form-label">Last Name</label>
-                                <input type="surname" class="form-control" id="surname" name="surname" maxlength="25" placeholder="Enter your surname" required>
+                                <input type="text" class="form-control" id="surname" name="surname" maxlength="25" placeholder="Enter your surname" >
                             </div>
 
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="email" name="email" maxlength="35" placeholder="name@example.com" required>
+                                <input type="email" class="form-control" id="email" name="email" maxlength="35" placeholder="name@example.com" >
                             </div>
 
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" maxlength="250" placeholder="Password" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="confirmPassword" class="form-label">Confirm Password</label>
-                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" maxlength="250" placeholder="Confirm your password" required>
+                                <input type="password" class="form-control" id="password" name="password" maxlength="250" placeholder="Password" >
                             </div>
 
                             <div class="mb-3 text-center">

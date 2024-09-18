@@ -1,3 +1,15 @@
+<?php 
+session_start();
+
+if(isset($_SESSION['login'])){
+    
+    $name = $_SESSION['name'];
+    $surname = $_SESSION['surname'];
+
+}else{
+    header("Location: login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -15,6 +27,23 @@
     </head>
     <body>
         <?php include 'header.php'; ?>
+        
+        
+          <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" id="mainNav">
+            <div class="container">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mx-auto">
+                    <li class="nav-item px-lg-4 nav-link text-uppercase">Welcome <?php echo $name; echo " "; echo $surname; ?></li> 
+                   
+                        <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="logout.php">Logout</a></li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>      
+        
+  
         <section class="page-section">
             <div class="container">
                 <div class="product-item">
