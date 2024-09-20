@@ -10,6 +10,32 @@ if(isset($_SESSION['login'])){
 }else{
     header("Location: login.php");
 }
+
+
+
+//połącznie z bazą
+require_once realpath(__DIR__ . "/../vendor/autoload.php");
+use Dotenv\Dotenv;
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$hostname = $_ENV["DATABASE_HOST"];
+$user = $_ENV["DATABASE_USER"];
+$pass = $_ENV["DATABASE_PASS"];
+$databasename = $_ENV["DATABASE_NAME"];
+$userrole1 = $_ENV["USER_ROLE1"];
+$userrole2 = $_ENV["USER_ROLE2"];
+// Connection to the database
+$mysqli = new mysqli($hostname, $user, $pass, $databasename);
+
+// Sprawdzenie połączenia
+if ($mysqli->connect_error) {
+    die('Error: (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
+}
+
+// Pobranie użytkowników z bazy danych
+$query = "SELECT post_id, title, subtitle, post_msg FROM posts LIMIT 4";
+$result = $mysqli->query($query);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,94 +86,79 @@ if(isset($_SESSION['login'])){
             </div>
         </nav>      
         
-  
+
+          
+          
+<?php 
+if ($result->num_rows > 0) {
+    $imageNumber = 1; // Zmienna dla numeru obrazu
+    while($row = $result->fetch_assoc()) {
+        // Skracamy tekst wiadomości do 100 znaków
+        $shortMessage = substr($row['post_msg'], 0, 100) . '...';
+?>
         <section class="page-section">
             <div class="container">
                 <div class="product-item">
                     <div class="product-item-title d-flex">
                         <div class="bg-faded p-5 d-flex ms-auto rounded">
                             <h2 class="section-heading mb-0">
-                                <span class="section-heading-upper">Blended to Perfection</span>
-                                <span class="section-heading-lower">Coffees & Teas</span>
+                                <span class="section-heading-upper"><?php echo $row['subtitle']; ?></span>
+                                <span class="section-heading-lower"><?php echo $row['title']; ?></span>
                             </h2>
                         </div>
                     </div>
-                    <img class="product-item-img mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src="../assets/img/products-01.jpg" alt="..." />
+                    <!-- Dynamicznie zmieniający się numer obrazu od 1 do 4 -->
+                    <img class="product-item-img mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" 
+                         src="../assets/img/products-0<?php echo $imageNumber; ?>.jpg" alt="..." />
                     <div class="product-item-description d-flex me-auto">
-                        <div class="bg-faded p-5 rounded"><p class="mb-0">We take pride in our work, and it shows. Every time you order a beverage from us, we guarantee that it will be an experience worth having. Whether it's our world famous Venezuelan Cappuccino, a refreshing iced herbal tea, or something as simple as a cup of speciality sourced black coffee, you will be coming back for more.</p></div>
-                        <!-- przycisk który otworzy model połączony z danym id -->
-                        <div class="text-center position-relative"><button type="button" id="readmore" class="btn btn-primary btn-xl position-absolute top-100 start-50 translate-middle" data-bs-toggle="modal" data-bs-target="#myModal"  href="blog.php">Read more</button></div>
-                    </div>
-                    
-                </div>
-                 
-            </div>
-            
-        </section>
-        <section class="page-section">
-            <div class="container">
-                <div class="product-item">
-                    <div class="product-item-title d-flex">
-                        <div class="bg-faded p-5 d-flex me-auto rounded">
-                            <h2 class="section-heading mb-0">
-                                <span class="section-heading-upper">Delicious Treats, Good Eats</span>
-                                <span class="section-heading-lower">Bakery & Kitchen</span>
-                            </h2>
+                        <div class="bg-faded p-5 rounded">
+                            <!-- Wyświetlamy skrócony tekst wiadomości -->
+                            <p class="mb-0"><?php echo $shortMessage; ?></p>
+                        </div>
+                        <!-- przycisk który otworzy pełny tekst wiadomości w modal -->
+                        <div class="text-center position-relative">
+                            <button type="button" class="btn btn-primary btn-xl position-absolute top-100 start-50 translate-middle" data-bs-toggle="modal" data-bs-target='#postModal<?php echo $row["post_id"]; ?>'>Read more</button>
                         </div>
                     </div>
-                    <img class="product-item-img mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src="../assets/img/products-02.jpg" alt="..." />
-                    <div class="product-item-description d-flex ms-auto">
-                        <div class="text-center position-relative"><button type="button" data-toggle="modal" data-target="#myModal2" class="btn btn-primary btn-xl position-absolute top-100 start-0 translate-middle" href="blog.php">Read more</button></div>
-                        <div class="bg-faded p-5 rounded"><p class="mb-0">Our seasonal menu features delicious snacks, baked goods, and even full meals perfect for breakfast or lunchtime. We source our ingredients from local, oragnic farms whenever possible, alongside premium vendors for specialty goods.</p></div>
-                    
-                    </div>
                 </div>
             </div>
         </section>
-        <section class="page-section">
-            <div class="container">
-                <div class="product-item">
-                    <div class="product-item-title d-flex">
-                        <div class="bg-faded p-5 d-flex ms-auto rounded">
-                            <h2 class="section-heading mb-0">
-                                <span class="section-heading-upper">From Around the World</span>
-                                <span class="section-heading-lower">Bulk Speciality Blends</span>
-                            </h2>
-                        </div>
+
+        <!-- Modal z pełnym tekstem wiadomości -->
+        <div class="modal fade" id='postModal<?php echo $row["post_id"]; ?>' tabindex="-1" aria-labelledby='postModalLabel<?php echo $row["post_id"]; ?>' aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id='postModalLabel<?php echo $row["post_id"]; ?>'><?php echo $row['title']; ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <img class="product-item-img mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src="../assets/img/products-03.jpg" alt="..." />
-                    <div class="product-item-description d-flex me-auto">
-                        <div class="bg-faded p-5 rounded"><p class="mb-0">Travelling the world for the very best quality coffee is something take pride in. When you visit us, you'll always find new blends from around the world, mainly from regions in Central and South America. We sell our blends in smaller to large bulk quantities. Please visit us in person for more details.</p></div>
-                    <div class="text-center position-relative"><button type="button" data-bs-toggle="modal" data-bs-target="#myModal3" class="btn btn-primary btn-xl position-absolute top-100 start-50 translate-middle" href="blog.php">Read more</button></div>
+                    <div class="modal-body">
+                        <!-- Wyświetlamy pełną wiadomość -->
+                        <p><?php echo $row['post_msg']; ?></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
-        </section>
-        
-        <!-- Modal 1 - zastąpić połączeiem z bazą danych -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+        </div>
 
-    <!-- Modal content -->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Coconut Oil Coffee</h4>
-      </div>
-      <div class="modal-body">
-        <p>Sample Text.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
+<?php 
+        // Zwiększ numer obrazu, zresetuj do 1, jeśli przekroczy 4
+        $imageNumber = ($imageNumber % 4) + 1;
+    }
+} else {
+    echo "<p>No posts found.</p>";
+}
+?>
 
-  </div>
-</div>     
+          
+          
+     
         <?php include 'footer.php'; ?>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
+        <script src="../js/scripts.js"></script>
     </body>
 </html>

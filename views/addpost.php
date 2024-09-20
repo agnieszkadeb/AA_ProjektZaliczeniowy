@@ -30,30 +30,40 @@ $subtitle = mysqli_real_escape_string($mysqli, $_POST['subtitle']);
 $message = mysqli_real_escape_string($mysqli, $_POST['message']);
 
 // Walidacja
-if (strlen($title) < 2) {
+if (strlen($title) == "") {
     echo 'title';  // Tytuł jest za krótki
     exit();
 } 
-elseif (strlen($subtitle) < 2) {
+elseif (strlen($subtitle) == "") {
     echo 'subtitle';  // Podtytuł jest za krótki
     exit();
 } 
-elseif (strlen($message) < 2) {
+elseif (strlen($message)  == "") {
     echo 'message';  // Treść posta jest za krótka
     exit();
+} elseif (strlen($title) <= 4) {
+    echo 'tshort';  // tytuł jest za krótki
+    exit();
 } 
+elseif (strlen($subtitle) <= 4) {
+    echo 'sshort';  // podtytuł format emaila
+    exit();
+} 
+elseif (strlen($message) < 10) {
+    echo 'mshort';  // post jest za krótki
+    exit();
+}
 else {
     // Wstawienie nowego posta do bazy danych
-    $insert_row = $mysqli->query("INSERT INTO posts (title, post_msg, subtitle) VALUES ('$title', '$message','$subtitle')");
+    $insert_row = $mysqli->query("INSERT INTO posts (title, subtitle, post_msg ) VALUES ('$title','$subtitle', '$message')");
     
     // Sprawdzenie, czy wstawienie się powiodło
     if ($insert_row) {
-        header("Location: createpost.php");
+        header("Location: postslist.php");
     } else {
         // Jeśli wstawienie się nie powiodło, zwróć 'error'
        header("Location: error404.php"); // Błąd
     }
-
-    exit();
 }
+    exit();
 ?>

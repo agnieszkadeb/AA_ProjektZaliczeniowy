@@ -16,9 +16,9 @@
                         <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="about.php">About</a></li>
                         <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="blog.php">Blog</a></li>
                         <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="store.php">Contact</a></li>
-                        <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="adminconsole.php">Admin Console</a></li>
-                        <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="contactlist.php">Contacts</a></li>
-                       <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="createpost.php">Create Post</a></li>
+                        <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="adminconsole.php">User Administration</a></li>
+                        <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="contactlist.php"> Contacts Administration</a></li>
+                       <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="postslist.php">Posts Administration</a></li>
                     </ul>
                 </div>
             </div>

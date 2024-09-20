@@ -37,7 +37,7 @@ if(isset($_SESSION['login'])){
             event.preventDefault(); // Prevent the default form submission
 
             // Get input values
-            var title = $("#title").val().trim();
+            var title = $("#title").val();
             var subtitle = $("#subtitle").val();
             var message = $("#message").val();
 
@@ -57,7 +57,7 @@ if(isset($_SESSION['login'])){
                     if (response === 'true') {
                         // If post creation was successful
                         $("#error_msg").html('<div class="alert alert-success"><strong>Post</strong> created successfully.</div>');
-                        window.location.href = "index.php"; // Redirect after success
+                        header("Location: postslist.php"); // Redirect after success
                     } else if (response === 'title') {
                         // If title is missing
                         $("#error_msg").html('<div class="alert alert-danger"><strong>Title</strong> is required.</div>');
@@ -67,14 +67,25 @@ if(isset($_SESSION['login'])){
                     } else if (response === 'message') {
                         // If message is missing
                         $("#error_msg").html('<div class="alert alert-danger"><strong>Message</strong> is required.</div>');
-                    } else {
+                    } else if (response === 'tshort') {
+                        // If the email field is too short
+                        $("#error_msg").html('<div class="alert alert-danger"><strong>Title</strong> is too short.</div>');
+                    } else if (response === 'sshort') {
+                        // If the email format is invalid
+                        $("#error_msg").html('<div class="alert alert-danger"><strong>Subtitle</strong> format is not valid.</div>');
+                    } else if (response === 'mshort') { 
+                        // If the password is too short
+                        $("#error_msg").html('<div class="alert alert-danger"><strong>Message</strong> must be at least 10 characters.</div>');
+                        
+                        } else {
                         // Generic error message
-                        $("#error_msg").html('<div class="alert alert-danger"><strong>Error!</strong> Processing request. Please try again.</div>');
+                            $("#error_msg").html('<div class="alert alert-danger"><strong>Error!</strong> Processing request. Please try again.</div>');
                     }
                 },
                 error: function () {
                     // Handle any errors during the AJAX request
                     $("#error_msg").html('<div class="alert alert-danger"><strong>Error!</strong> Something went wrong.</div>');
+                    
                 },
                 beforeSend: function () {
                     // Show a loading message before the request is processed
