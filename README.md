@@ -4,9 +4,9 @@
 
 Ten projekt to aplikacja blogowa z systemem wielopoziomowego dostępu. 
 Użytkownicy mogą mieć różne role, takie jak "Admin" i "User", co pozwala na kontrolowanie dostępu do różnych funkcji aplikacji.
-Użytkownik niezalogowany może wysłać wiadomość formą kontaktową do administratora blooga.
+Użytkownik niezalogowany może wysłać wiadomość formą kontaktową do administratora bloga.
 Użytkownik zalogowany może wyświetlać blog.
-Administrator bloga ma możiwość zarządzania użytkownikami, postami oraz kontaktami w aplikacji webowej. 
+Administrator bloga ma możliwość zarządzania użytkownikami, postami oraz kontaktami w aplikacji webowej. 
 
 ## Funkcjonalności
 
