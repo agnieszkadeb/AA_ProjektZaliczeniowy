@@ -98,6 +98,7 @@ $result = $mysqli->query($query);
                                 echo "<td>" . $row['post_msg'] . "</td>";
                                 echo "<td>" . $row['date'] . "</td>";
                                 echo "<td><a class='btn btn-primary btn-xl' href='deletepost.php?delete_post_id=" . $row['post_id'] . "'>Delete</a></td>";
+                                echo "<td><a class='btn btn-primary btn-xl' href='editpost.php?edit_post_id=" . $row['post_id'] . "'>Edit</a></td>";
                                 
                                 echo "</tr>";
                             }

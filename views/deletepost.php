@@ -27,12 +27,12 @@ if ($mysqli->connect_error) {
 
 // Sprawdzamy, czy użytkownik chce usunąć innego użytkownika
 if (isset($_GET['delete_post_id'])) {
-    $user_id = intval($_GET['delete_post_id']); // Zabezpieczenie ID
+    $post_id = intval($_GET['delete_post_id']); // Zabezpieczenie ID
 
     // Tworzymy zapytanie do usunięcia użytkownika
     $delete_query = "DELETE FROM posts WHERE post_id = ?";
     $stmt = $mysqli->prepare($delete_query);
-    $stmt->bind_param('i', $user_id);
+    $stmt->bind_param('i', $post_id);
 
     if ($stmt->execute()) {
       // Użytkownik został pomyślnie usunięty
