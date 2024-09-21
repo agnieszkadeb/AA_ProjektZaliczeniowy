@@ -2,7 +2,7 @@
 // Start a session if needed (optional)
 session_start();
 
-require_once dirname(__FILE__).'../config.php';
+require_once dirname(__FILE__).'/../config.php';
 
 //przekierowanie przeglądarki klienta (redirect)
 

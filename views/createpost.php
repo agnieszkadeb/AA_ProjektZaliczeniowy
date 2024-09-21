@@ -57,7 +57,7 @@ if(isset($_SESSION['login'])){
                     if (response === 'true') {
                         // If post creation was successful
                         $("#error_msg").html('<div class="alert alert-success"><strong>Post</strong> created successfully.</div>');
-                        header("Location: postslist.php"); // Redirect after success
+                        window.location.href = 'postslist.php'; // Redirect after success
                     } else if (response === 'title') {
                         // If title is missing
                         $("#error_msg").html('<div class="alert alert-danger"><strong>Title</strong> is required.</div>');

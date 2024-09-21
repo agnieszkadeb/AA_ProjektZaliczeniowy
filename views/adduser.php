@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 
 // Włączanie wyświetlania błędów podczas rozwoju (wyłącz na produkcji)
@@ -16,6 +16,7 @@ $hostname = $_ENV["DATABASE_HOST"];
 $user = $_ENV["DATABASE_USER"];
 $pass = $_ENV["DATABASE_PASS"];
 $databasename = $_ENV["DATABASE_NAME"];
+
 // Connection to the database
 $mysqli = new mysqli($hostname, $user, $pass, $databasename);
 
@@ -25,10 +26,10 @@ if ($mysqli->connect_error) {
 }
 
 // Pobranie i zabezpieczenie danych z POST
-$name = mysqli_real_escape_string($mysqli, $_POST['name']);
-$surname = mysqli_real_escape_string($mysqli, $_POST['surname']); // Poprawiono literówkę 'surmanme' na 'surname'
-$email = mysqli_real_escape_string($mysqli, $_POST['email']);
-$password = mysqli_real_escape_string($mysqli, $_POST['password']);
+$name = trim($_POST['name']);
+$surname = trim($_POST['surname']);
+$email = trim($_POST['email']);
+$password = trim($_POST['password']);
 
 // Walidacja
 if (strlen($name) < 2) {
@@ -56,9 +57,12 @@ else {
     $spassword = password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]);
 
     // Sprawdzenie, czy email już istnieje w bazie danych
-    $query = "SELECT * FROM members WHERE email='$email'";
-    $result = mysqli_query($mysqli, $query) or die(mysqli_error($mysqli));
-    $num_row = mysqli_num_rows($result);
+    $stmt = $mysqli->prepare("SELECT * FROM members WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $num_row = $result->num_rows;
+    $stmt->close();
 
     if ($num_row >= 1) {
         echo 'false'; // Email już istnieje
@@ -66,10 +70,11 @@ else {
     }
 
     // Wstawienie nowego członka do bazy danych
-    $insert_row = $mysqli->query("INSERT INTO members (name, surname, email, password) VALUES ('$name', '$surname', '$email', '$spassword')");
-    
+    $stmt = $mysqli->prepare("INSERT INTO members (name, surname, email, password) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $name, $surname, $email, $spassword);
+
     // Sprawdzenie, czy wstawienie się powiodło
-    if ($insert_row) {
+    if ($stmt->execute()) {
         // Ustawienie zmiennych sesyjnych dla nowego użytkownika
         $_SESSION['login'] = $mysqli->insert_id;  // Zapisanie ID użytkownika w sesji
         $_SESSION['name'] = $name;                // Zapisanie imienia w sesji
@@ -81,6 +86,7 @@ else {
         echo 'error';
     }
 
+    $stmt->close();
     exit();
 }
 ?>
